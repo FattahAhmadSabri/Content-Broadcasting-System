@@ -16,8 +16,8 @@ router.post(
   "/content",
   authenticate,
   allowRoles("principal", "teacher"),
-  upload.single("file"),
   createContent,
+  upload.single("file"),
 );
 
 router.patch(
