@@ -15,9 +15,9 @@ const router = express.Router();
 router.post(
   "/content",
   authenticate,
-  allowRoles("principal", "teacher"),
-  createContent,
+  allowRoles("teacher"),
   upload.single("file"),
+  createContent,
 );
 
 router.patch(
