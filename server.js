@@ -3,10 +3,10 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { sequelize } = require("./src/models");
-const {limiter} = require("./src/middlewares/rateLimiter");
+const { limiter } = require("./src/middlewares/rateLimiter");
 const port = process.env.PORT || 4000;
 const app = express();
-
+app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
 app.use(limiter);
