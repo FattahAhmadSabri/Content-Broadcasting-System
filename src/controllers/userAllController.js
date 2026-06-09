@@ -1,19 +1,43 @@
 const { Users } = require("../models");
+const client = require("../config/redisClient");
 const getAllUsers = async (req, res) => {
   try {
+    const cacheKey = "all_users";
+
+    const cachedUsers = await client.get(cacheKey);
+
+    if (cachedUsers) {
+      console.log("Data from Redis");
+
+      return res.status(200).json({
+        status: "success",
+        data: JSON.parse(cachedUsers),
+      });
+    }
+
+    console.log("Data from Database");
+
     const users = await Users.findAll({
-      attributes: { exclude: ["password_hash"] },
+      attributes: {
+        exclude: ["password_hash"],
+      },
     });
 
-    res.status(200).json({
-      status: "success",
+    await client.set(cacheKey, JSON.stringify(users), "EX", 1500);
+
+    const check = await client.get(cacheKey);
+console.log("After Set:", check ? "Stored" : "Not Stored");
+
+    return res.status(200).json({
+      status: "success",    
       data: users,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({
+      message: err.message,
+    });
   }
 };
-
 const getUserById = async (req, res) => {
   try {
     const id = req.params.id;

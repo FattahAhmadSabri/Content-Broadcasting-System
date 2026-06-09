@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/signup", signup);
 router.post("/login", loginLimiter, login);
 
-router.get("/users", authenticate, allowRoles("principal"), getAllUsers);
+router.get("/users", getAllUsers);
 router.get("/users/:id", authenticate, allowRoles("principal"), getUserById);
 router.patch("/users/:id", authenticate, allowRoles("principal"), updateUser);
 router.delete("/users/:id", authenticate, allowRoles("principal"), deleteUser);
